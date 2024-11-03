@@ -1,13 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from typing import Optional
 
 
 class Node:
-    def __init__(self, x, y, left=None, right=None, axis=0):
+    def __init__(self, x, y, left_node=None, right_node=None, axis=0):
         self.x = x
         self.y = y
-        self.left = left
-        self.right = right
+        self.left_node = left_node
+        self.right_node = right_node
         self.axis = axis
 
 
@@ -18,7 +19,7 @@ class KDTree:
     def build(self):
         self.root = self.build_tree(self.points, 0)
 
-    def build_tree(self, points: list[Node], axis=0) -> Node:
+    def build_tree(self, points: list[Node], axis=0) -> Optional[Node]:
         if len(points) == 0:
             return None
         if len(points) == 1:
@@ -52,11 +53,11 @@ class KDTree:
         plt.show()
 
     def draw_points_of_tree(self, node: Node):
-        if node.left is not None:
-            self.draw_points_of_tree(node.left)
+        if node.left_node is not None:
+            self.draw_points_of_tree(node.left_node)
         plt.scatter(node.x, node.y)
-        if node.right is not None:
-            self.draw_points_of_tree(node.right)
+        if node.right_node is not None:
+            self.draw_points_of_tree(node.right_node)
 
         if node.axis == 0:
             plt.axvline(x=node.x, color="g", linestyle="--", alpha=0.3)
@@ -81,8 +82,8 @@ class KDTree:
             )
 
             spacing = 2.0 / (2**level)
-            plot_node(node.left, (x - spacing, y), level + 1, (x, y))
-            plot_node(node.right, (x + spacing, y), level + 1, (x, y))
+            plot_node(node.left_node, (x - spacing, y), level + 1, (x, y))
+            plot_node(node.right_node, (x + spacing, y), level + 1, (x, y))
 
         plt.figure(figsize=(12, 8))
         plot_node(self.root)
